@@ -1,8 +1,36 @@
 import { create } from 'zustand';
 
+// Safely read initial auth from localStorage
+const getSavedAuth = () => {
+  try {
+    const raw = localStorage.getItem('cologuri_admin_session');
+    return raw ? JSON.parse(raw) : null;
+  } catch (e) {
+    return null;
+  }
+};
+
+const initialAuth = getSavedAuth();
+
 export const useStore = create((set, get) => ({
-  // User role ('user', 'groupAdmin', 'superAdmin')
-  role: 'user',
+  // Auth state
+  currentUser: initialAuth,
+  role: initialAuth?.role || null, // 'groupAdmin' | 'superAdmin' | null
+  
+  login: (userData) => {
+    try {
+      localStorage.setItem('cologuri_admin_session', JSON.stringify(userData));
+    } catch (e) {}
+    set({ currentUser: userData, role: userData.role });
+  },
+
+  logout: () => {
+    try {
+      localStorage.removeItem('cologuri_admin_session');
+    } catch (e) {}
+    set({ currentUser: null, role: null });
+  },
+
   setRole: (role) => set({ role }),
 
   // View routing state (for backwards-compatible seamless view switcher)
