@@ -74,11 +74,13 @@ export const destinations = [
 // --------------- Live Tour Packages ---------------
 export const liveTourPackages = [
   {
-    id: 'tp1', slug: 'sajek-joint-oct', title: 'সাজেক ভ্যালি — পূর্ণিমা ট্যুর',
+    id: 'tp1', slug: 'sajek-joint-oct', title: 'মেঘ ছোঁয়ার সাজেক ভ্যালি ও কংলাক পাহাড়ি অভিযান',
+    creatorGroupId: 'tg1',
+    creatorGroupName: 'ঘুরি বাংলাদেশ',
     operator: tourGroups[0], destination: destinations[0],
     route: 'ঢাকা → খাগড়াছড়ি → সাজেক → ঢাকা',
     startDate: '২৮ অক্টোবর ২০২৬', endDate: '৩১ অক্টোবর ২০২৬',
-    duration: '৩ রাত ৪ দিন', totalSeats: 40, bookedSeats: 32,
+    duration: '৩ রাত ৪ দিন', totalSeats: 40, bookedSeats: 31,
     pricePerPerson: 4800, isJointTour: true, tourType: 'combine',
     coOrganizers: [tourGroups[1]],
     partnerGroups: [
@@ -87,6 +89,10 @@ export const liveTourPackages = [
         groupName: 'ঘুরি বাংলাদেশ',
         groupSlug: 'ghuri-bd',
         color: '#166B47',
+        customTitle: 'মেঘ ছোঁয়ার সাজেক ভ্যালি ও কংলাক পাহাড়ি অভিযান',
+        price: 4800,
+        originalPrice: 5500,
+        discount: 700,
         allocatedSeats: [
           'A1', 'A2', 'A3', 'A4',
           'B1', 'B2', 'B3', 'B4',
@@ -94,12 +100,23 @@ export const liveTourPackages = [
           'D1', 'D2', 'D3', 'D4',
           'E1', 'E2', 'E3'
         ],
+        bookedSeats: [
+          'A1', 'A2',
+          'B1', 'B2', 'B3', 'B4',
+          'C1', 'C2',
+          'D1', 'D2', 'D3', 'D4',
+          'E1', 'E2'
+        ],
       },
       {
         groupId: 'tg2',
         groupName: 'সবুজ পথিক',
         groupSlug: 'sobuj-pathik',
         color: '#C9622B',
+        customTitle: 'সাজেক পূর্ণিমা ও হ্যালিপ্যাড ক্যাম্পিং — সবুজ পথিক',
+        price: 4600,
+        originalPrice: 5200,
+        discount: 600,
         allocatedSeats: [
           'E4',
           'F1', 'F2', 'F3', 'F4',
@@ -108,8 +125,28 @@ export const liveTourPackages = [
           'I1', 'I2', 'I3', 'I4',
           'J1', 'J2', 'J3', 'J4'
         ],
+        bookedSeats: [
+          'F1', 'F2', 'F3',
+          'G1', 'G2',
+          'H1', 'H2', 'H3', 'H4',
+          'I1', 'I2', 'I3', 'I4',
+          'J1', 'J2', 'J3', 'J4'
+        ],
       },
     ],
+    busInfo: {
+      busName: 'শান্তি পরিবহন / শ্যামলী এন.আর ট্রাভেলস',
+      busType: 'হিনো ১জে এসি লাক্সারি চেয়ার কোচ (২ x ২)',
+      departureTime: 'রাত ১০:৩০ মিনিট',
+      departurePlace: 'আরামবাগ বাস টার্মিনাল, ঢাকা',
+      dropOffPlace: 'খাগড়াছড়ি বাস টার্মিনাল',
+      totalSeats: 40,
+      bookedSeats: [
+        'A1', 'A2', 'B1', 'B2', 'B3', 'B4', 'C1', 'C2', 'D1', 'D2', 'D3', 'D4', 'E1', 'E2',
+        'F1', 'F2', 'F3', 'G1', 'G2', 'H1', 'H2', 'H3', 'H4', 'I1', 'I2', 'I3', 'I4', 'J1', 'J2', 'J3', 'J4'
+      ],
+      femaleSeats: ['C3', 'C4'],
+    },
     seatTransfers: [
       {
         seatNo: 'E4',
@@ -126,6 +163,8 @@ export const liveTourPackages = [
   },
   {
     id: 'tp2', slug: 'sundarban-winter', title: 'সুন্দরবন শীতকালীন অভিযান',
+    creatorGroupId: 'tg5',
+    creatorGroupName: 'সুন্দরবন এক্সপ্লোরার',
     operator: tourGroups[4], destination: destinations[1],
     route: 'ঢাকা → মোংলা → সুন্দরবন → ঢাকা',
     startDate: '১৫ নভেম্বর ২০২৬', endDate: '১৭ নভেম্বর ২০২৬',
@@ -138,6 +177,10 @@ export const liveTourPackages = [
         groupName: 'সুন্দরবন এক্সপ্লোরার',
         groupSlug: 'sundarban-explorer',
         color: '#0284C7',
+        customTitle: 'সুন্দরবন ম্যানগ্রোভ ক্রুজ ও ওয়াইল্ডলাইফ সাফারি',
+        price: 6500,
+        originalPrice: 7200,
+        discount: 700,
         allocatedSeats: [
           'A1', 'A2', 'A3', 'A4',
           'B1', 'B2', 'B3', 'B4',
@@ -145,12 +188,23 @@ export const liveTourPackages = [
           'D1', 'D2', 'D3', 'D4',
           'E1', 'E2', 'E3', 'E4'
         ],
+        bookedSeats: [
+          'A1', 'A2', 'A3',
+          'B1', 'B2',
+          'C1', 'C2', 'C3',
+          'D1', 'D2',
+          'E1', 'E2', 'E3'
+        ],
       },
       {
         groupId: 'tg1',
         groupName: 'ঘুরি বাংলাদেশ',
         groupSlug: 'ghuri-bd',
         color: '#166B47',
+        customTitle: 'সুন্দরবন শীতকালীন রিফ্রেশিং ট্রিপ — ঘুরি বাংলাদেশ',
+        price: 6300,
+        originalPrice: 7000,
+        discount: 700,
         allocatedSeats: [
           'F1', 'F2', 'F3', 'F4',
           'G1', 'G2', 'G3', 'G4',
@@ -158,8 +212,28 @@ export const liveTourPackages = [
           'I1', 'I2', 'I3', 'I4',
           'J1', 'J2', 'J3', 'J4'
         ],
+        bookedSeats: [
+          'F1', 'F2',
+          'G1', 'G2', 'G3',
+          'H1', 'H2',
+          'I1', 'I2', 'I3',
+          'J1', 'J2', 'J3'
+        ],
       },
     ],
+    busInfo: {
+      busName: 'গ্রিন লাইন ওয়াটারওয়েজ ও পরিবহন',
+      busType: 'লাক্সারি কেবিন ভেসেল ও এসি চেয়ার কোচ',
+      departureTime: 'রাত ১১:০০ মিনিট',
+      departurePlace: 'সায়েদাবাদ বাস টার্মিনাল, ঢাকা',
+      dropOffPlace: 'মোংলা ফেরীঘাট',
+      totalSeats: 40,
+      bookedSeats: [
+        'A1', 'A2', 'A3', 'B1', 'B2', 'C1', 'C2', 'C3', 'D1', 'D2', 'E1', 'E2', 'E3',
+        'F1', 'F2', 'G1', 'G2', 'G3', 'H1', 'H2', 'I1', 'I2', 'I3', 'J1', 'J2', 'J3'
+      ],
+      femaleSeats: ['B3', 'B4'],
+    },
     seatTransfers: [],
     inclusions: ['লঞ্চ', 'সব খাবার', 'বনবিভাগ অনুমতি'],
     exclusions: ['ব্যক্তিগত খরচ', 'ক্যামেরা ফি'], status: 'live', category: 'premium',
