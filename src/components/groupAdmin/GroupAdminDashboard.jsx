@@ -3,15 +3,18 @@ import { useNavigate } from 'react-router-dom';
 import {
   LayoutDashboard, PlusCircle, Users, BarChart2,
   MapPin, Calendar, ChevronRight, Wallet, TrendingUp,
-  CheckCircle, AlertTriangle, Settings, LogOut, X
+  CheckCircle, AlertTriangle, Settings, LogOut, X,
+  ArrowRightLeft, Bus
 } from 'lucide-react';
 import { liveTourPackages, tourGroups } from '../../data/mockData';
 import BrandLogo from '../common/BrandLogo';
 import { useStore } from '../../store/useStore';
+import CreateTourInline from './CreateTourInline';
+import CentralSeatMonitor from './CentralSeatMonitor';
 
 export default function GroupAdminDashboard() {
   const [activeTab, setActiveTab] = useState('dashboard');
-  const [showCreateModal, setShowCreateModal] = useState(false);
+  const [tourList, setTourList] = useState(liveTourPackages);
   const navigate = useNavigate();
 
   const currentUser = useStore((state) => state.currentUser);
@@ -24,11 +27,44 @@ export default function GroupAdminDashboard() {
     navigate('/login', { replace: true });
   };
 
+  const handleTourCreated = (newTour) => {
+    setTourList([newTour, ...tourList]);
+  };
+
+  const handleSeatTransferred = ({ tourId, seats, fromGroupId, toGroupId, record }) => {
+    setTourList((prev) =>
+      prev.map((t) => {
+        if (t.id !== tourId) return t;
+        const updatedPartners = (t.partnerGroups || []).map((p) => {
+          if (p.groupId === fromGroupId) {
+            return {
+              ...p,
+              allocatedSeats: (p.allocatedSeats || []).filter((s) => !seats.includes(s)),
+            };
+          }
+          if (p.groupId === toGroupId) {
+            return {
+              ...p,
+              allocatedSeats: [...new Set([...(p.allocatedSeats || []), ...seats])],
+            };
+          }
+          return p;
+        });
+        return {
+          ...t,
+          partnerGroups: updatedPartners,
+          seatTransfers: [record, ...(t.seatTransfers || [])],
+        };
+      })
+    );
+  };
+
   const tabs = [
     { id: 'dashboard', icon: LayoutDashboard, label: 'ড্যাশবোর্ড' },
+    { id: 'create', icon: PlusCircle, label: 'নতুন ট্যুর তৈরি' },
     { id: 'tours', icon: MapPin, label: 'আমার ট্যুর' },
     { id: 'seats', icon: Users, label: 'সিট ম্যানেজমেন্ট' },
-    { id: 'joint', icon: PlusCircle, label: 'জয়েন্ট ট্যুর' },
+    { id: 'joint', icon: ArrowRightLeft, label: 'যৌথ সিট মনিটরিং' },
     { id: 'earnings', icon: Wallet, label: 'আয় ও পেমেন্ট' },
   ];
 
@@ -37,7 +73,7 @@ export default function GroupAdminDashboard() {
       {/* Admin Top Header */}
       <header className="bg-[#03251A] py-3 px-6 flex items-center justify-between shadow-md border-b border-emerald-900/50 sticky top-0 z-30">
         <div className="flex items-center">
-          <BrandLogo theme="dark" className="h-9 sm:h-10 w-auto" portalSubtitle="গ্রুপ অ্যাডমিন পোর্টাল" alt="চলোঘুড়ি" />
+          <BrandLogo theme="dark" className="h-9 sm:h-10 w-auto" portalSubtitle="গ্রুপ অ্যাডমিন পোর্টাল" alt="চলোঘুড়ি" />
         </div>
 
         <div className="flex items-center gap-3">
@@ -131,7 +167,7 @@ export default function GroupAdminDashboard() {
                   </p>
                 </div>
                 <button
-                  onClick={() => setShowCreateModal(true)}
+                  onClick={() => setActiveTab('create')}
                   className="bg-[#168B5E] hover:bg-[#03251A] text-white text-xs font-bold px-4 py-2.5 rounded-xl shadow-xs transition-all flex items-center gap-1.5 cursor-pointer self-start sm:self-auto"
                 >
                   <PlusCircle size={15} aria-hidden="true" />
@@ -178,7 +214,7 @@ export default function GroupAdminDashboard() {
                 </div>
 
                 <div className="space-y-3">
-                  {liveTourPackages.map((pkg) => {
+                  {tourList.map((pkg) => {
                     const pct = Math.round((pkg.bookedSeats / pkg.totalSeats) * 100);
                     return (
                       <div
@@ -244,7 +280,7 @@ export default function GroupAdminDashboard() {
                   <p className="text-xs text-slate-500">আপনার অপারেটরের অধীনে সকল ট্যুর ও রুট তালিকা</p>
                 </div>
                 <button
-                  onClick={() => setShowCreateModal(true)}
+                  onClick={() => setActiveTab('create')}
                   className="bg-[#168B5E] hover:bg-[#03251A] text-white text-xs font-bold px-4 py-2.5 rounded-xl shadow-xs transition-all flex items-center gap-1.5 cursor-pointer"
                 >
                   <PlusCircle size={15} />
@@ -253,7 +289,7 @@ export default function GroupAdminDashboard() {
               </div>
 
               <div className="grid gap-4">
-                {liveTourPackages.map((pkg) => (
+                {tourList.map((pkg) => (
                   <div key={pkg.id} className="bg-white rounded-2xl border border-slate-200/90 shadow-xs p-5 hover:shadow-md transition-all">
                     <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                       <div>
@@ -319,7 +355,7 @@ export default function GroupAdminDashboard() {
               </div>
 
               <div className="grid gap-5">
-                {liveTourPackages.map((pkg) => (
+                {tourList.map((pkg) => (
                   <div key={pkg.id} className="bg-white rounded-2xl border border-slate-200/90 shadow-xs p-6">
                     <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-5 pb-3 border-b border-slate-100">
                       <div>
@@ -374,38 +410,14 @@ export default function GroupAdminDashboard() {
             </div>
           )}
 
-          {/* TAB 4: JOINT TOURS */}
+          {/* TAB 4: CENTRAL JOINT MONITORING */}
           {activeTab === 'joint' && (
             <div className="max-w-6xl mx-auto space-y-6">
-              <div>
-                <h1 className="text-2xl font-bold text-slate-900" style={{ fontFamily: '"Tiro Bangla", serif' }}>
-                  জয়েন্ট ট্যুর পার্টনারশিপ
-                </h1>
-                <p className="text-xs text-slate-500">অন্যান্য ভেরিফায়েড ট্যুর গ্রুপের সাথে সিট শেয়ারিং ও কোলাবোরেশন</p>
-              </div>
-
-              <div className="grid md:grid-cols-2 gap-4">
-                {tourGroups.slice(1).map((group) => (
-                  <div key={group.id} className="bg-white rounded-2xl border border-slate-200/90 shadow-xs p-5 flex items-center justify-between gap-4">
-                    <div>
-                      <div className="flex items-center gap-1.5 mb-1">
-                        <p className="font-bold text-slate-900 text-sm">{group.name}</p>
-                        {group.verified && (
-                          <CheckCircle size={14} className="text-emerald-600" aria-hidden="true" />
-                        )}
-                      </div>
-                      <p className="text-xs text-slate-500">📍 {group.location} • ★ {group.rating}</p>
-                      <p className="text-xs text-emerald-800 font-semibold mt-1">{group.totalTours}টি পরিচালিত ট্যুর</p>
-                    </div>
-                    <button
-                      onClick={() => alert(`"${group.name}" এর সাথে পার্টনারশিপ আমন্ত্রণ পাঠানো হয়েছে!`)}
-                      className="bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-300 text-xs font-bold px-3.5 py-2 rounded-xl transition-all cursor-pointer shrink-0"
-                    >
-                      পার্টনারশিপ আমন্ত্রণ
-                    </button>
-                  </div>
-                ))}
-              </div>
+              <CentralSeatMonitor
+                tours={tourList}
+                currentGroup={currentUser}
+                onSeatTransferred={handleSeatTransferred}
+              />
             </div>
           )}
 
@@ -463,145 +475,19 @@ export default function GroupAdminDashboard() {
               </div>
             </div>
           )}
+
+          {/* TAB: CREATE TOUR (INLINE FULL PAGE) */}
+          {activeTab === 'create' && (
+            <CreateTourInline
+              onTourCreated={(newTour) => {
+                handleTourCreated(newTour);
+                setActiveTab('tours');
+              }}
+              onCancel={() => setActiveTab('dashboard')}
+              currentUser={currentUser}
+            />
+          )}
         </main>
-      </div>
-
-      {/* Create Tour Modal */}
-      {showCreateModal && (
-        <CreateTourModal onClose={() => setShowCreateModal(false)} />
-      )}
-    </div>
-  );
-}
-
-function CreateTourModal({ onClose }) {
-  const [title, setTitle] = useState('');
-  const [route, setRoute] = useState('');
-  const [date, setDate] = useState('2026-11-15');
-  const [seats, setSeats] = useState('30');
-  const [price, setPrice] = useState('5200');
-  const [isJoint, setIsJoint] = useState(false);
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    alert(`নতুন ট্যুর "${title || 'সাজেক অভিযান'}" সফলভাবে প্রকাশিত হয়েছে!`);
-    onClose();
-  };
-
-  return (
-    <div
-      role="dialog"
-      aria-modal="true"
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs"
-    >
-      <div className="relative bg-white rounded-3xl shadow-2xl max-w-lg w-full p-6 sm:p-7 border border-slate-200 max-h-[90vh] overflow-y-auto">
-        <div className="flex items-center justify-between pb-3 mb-4 border-b border-slate-100">
-          <h3 className="text-xl font-bold text-slate-900" style={{ fontFamily: '"Tiro Bangla", serif' }}>
-            নতুন ট্যুর প্যাকেজ তৈরি
-          </h3>
-          <button
-            onClick={onClose}
-            className="p-1 rounded-xl text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors cursor-pointer"
-          >
-            <X size={18} />
-          </button>
-        </div>
-
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label className="block text-xs font-bold text-slate-700 mb-1">
-              ট্যুরের শিরোনাম *
-            </label>
-            <input
-              type="text"
-              required
-              placeholder="যেমন: মেঘ ছোঁয়ার সাজেক ভ্যালি ৩ রাত ২ দিন"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-              className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-700"
-            />
-          </div>
-
-          <div>
-            <label className="block text-xs font-bold text-slate-700 mb-1">
-              ভ্রমণ রুট *
-            </label>
-            <input
-              type="text"
-              required
-              placeholder="ঢাকা → খাগড়াছড়ি → সাজেক → কংলাক"
-              value={route}
-              onChange={(e) => setRoute(e.target.value)}
-              className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-700"
-            />
-          </div>
-
-          <div className="grid grid-cols-2 gap-3">
-            <div>
-              <label className="block text-xs font-bold text-slate-700 mb-1">
-                যাত্রার তারিখ
-              </label>
-              <input
-                type="date"
-                value={date}
-                onChange={(e) => setDate(e.target.value)}
-                className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-700"
-              />
-            </div>
-            <div>
-              <label className="block text-xs font-bold text-slate-700 mb-1">
-                মোট সিট সংখ্যা
-              </label>
-              <input
-                type="number"
-                value={seats}
-                onChange={(e) => setSeats(e.target.value)}
-                className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-700"
-              />
-            </div>
-          </div>
-
-          <div>
-            <label className="block text-xs font-bold text-slate-700 mb-1">
-              জনপ্রতি মূল্য (৳)
-            </label>
-            <input
-              type="number"
-              value={price}
-              onChange={(e) => setPrice(e.target.value)}
-              className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-700"
-            />
-          </div>
-
-          <div className="flex items-center gap-2.5 pt-1">
-            <input
-              type="checkbox"
-              id="joint-opt"
-              checked={isJoint}
-              onChange={(e) => setIsJoint(e.target.checked)}
-              className="w-4 h-4 accent-emerald-700 rounded cursor-pointer"
-            />
-            <label htmlFor="joint-opt" className="text-xs text-slate-700 font-semibold cursor-pointer">
-              লাইভ জয়েন্ট ট্যুর হিসেবে পোস্ট করুন (অন্য গ্রুপ সিট শেয়ার করতে পারবে)
-            </label>
-          </div>
-
-          <div className="flex items-center gap-3 pt-3">
-            <button
-              type="button"
-              onClick={onClose}
-              className="flex-1 py-2.5 px-4 rounded-xl text-xs font-bold border border-slate-300 hover:bg-slate-50 transition-colors cursor-pointer"
-            >
-              বাতিল
-            </button>
-            <button
-              type="submit"
-              className="flex-1 py-2.5 px-4 rounded-xl text-xs font-bold bg-[#168B5E] hover:bg-[#03251A] text-white shadow-sm transition-all cursor-pointer"
-            >
-              ট্যুর প্রকাশ করুন
-            </button>
-          </div>
-        </form>
       </div>
     </div>
   );
