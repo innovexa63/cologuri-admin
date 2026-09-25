@@ -530,6 +530,29 @@ export default function GroupAdminDashboard() {
                     ))}
                   </select>
                 </div>
+
+                {/* Tour Selector Dropdown */}
+                <div className="flex items-center gap-2">
+                  <label className="text-xs font-bold text-slate-500">ট্যুর নির্বাচন:</label>
+                  <select
+                    value={activeSeatTour?.id || ''}
+                    onChange={(e) => setSelectedSeatTourId(e.target.value)}
+                    className="text-xs font-bold bg-white border border-slate-300 rounded-xl px-3.5 py-2 text-slate-800 cursor-pointer shadow-xs focus:ring-2 focus:ring-emerald-700"
+                  >
+                    {myTours.map((t) => (
+                      <option key={t.id} value={t.id}>
+                        {t.title} ({t.startDate})
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <button
+                  onClick={() => setActiveTab('create')}
+                  className="bg-[#168B5E] hover:bg-[#03251A] text-white text-xs font-bold px-4 py-2.5 rounded-xl shadow-xs transition-all flex items-center gap-1.5 cursor-pointer"
+                >
+                  <PlusCircle size={15} />
+                  <span>নতুন ট্যুর প্রকাশ</span>
+                </button>
               </div>
 
               {/* Status Alert */}
