@@ -530,6 +530,13 @@ export default function GroupAdminDashboard() {
                     ))}
                   </select>
                 </div>
+                <button
+                  onClick={() => setActiveTab('create')}
+                  className="bg-[#168B5E] hover:bg-[#03251A] text-white text-xs font-bold px-4 py-2.5 rounded-xl shadow-xs transition-all flex items-center gap-1.5 cursor-pointer"
+                >
+                  <PlusCircle size={15} />
+                  <span>নতুন ট্যুর প্রকাশ</span>
+                </button>
               </div>
 
               {/* Status Alert */}
