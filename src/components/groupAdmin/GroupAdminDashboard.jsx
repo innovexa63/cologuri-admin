@@ -73,7 +73,7 @@ export default function GroupAdminDashboard() {
       {/* Admin Top Header */}
       <header className="bg-[#03251A] py-3 px-6 flex items-center justify-between shadow-md border-b border-emerald-900/50 sticky top-0 z-30">
         <div className="flex items-center">
-          <BrandLogo theme="dark" className="h-9 sm:h-10 w-auto" portalSubtitle="গ্রুপ অ্যাডমিন পোর্টাল" alt="চলোঘুড়ি" />
+          <BrandLogo theme="dark" className="h-9 sm:h-10 w-auto" portalSubtitle="গ্রুপ অ্যাডমিন পোর্টাল" alt="চলোঘুড়ি" />
         </div>
 
         <div className="flex items-center gap-3">
@@ -280,7 +280,7 @@ export default function GroupAdminDashboard() {
                   <p className="text-xs text-slate-500">আপনার অপারেটরের অধীনে সকল ট্যুর ও রুট তালিকা</p>
                 </div>
                 <button
-                  onClick={() => setShowCreateModal(true)}
+                  onClick={() => setActiveTab('create')}
                   className="bg-[#168B5E] hover:bg-[#03251A] text-white text-xs font-bold px-4 py-2.5 rounded-xl shadow-xs transition-all flex items-center gap-1.5 cursor-pointer"
                 >
                   <PlusCircle size={15} />
